@@ -1,8 +1,7 @@
-import axios from "axios"
+import axios from "axios";
 
 const axiosClient = axios.create({
-  // baseURL: "http://localhost:3000",
-  baseURL: "https://lc-back-currwr.vercel.app",
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL, // for Vite
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
