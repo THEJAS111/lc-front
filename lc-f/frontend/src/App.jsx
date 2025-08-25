@@ -1,61 +1,51 @@
-import { useEffect, useState } from "react";
-import { Routes, Route,Navigate } from "react-router";
+import { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router";
 import Homepage from "./pages/homepage.jsx";
 import Login from "./pages/login.jsx";
-import Signup from "./pages/signup";
-import {checkAuth} from "./authsilce.js";
-import { useDispatch,useSelector } from "react-redux";
-import ProblemPage from "./pages/problempage.jsx"
+import Signup from "./pages/signup.jsx";
+import { checkAuth } from "./authsilce.js";
+import { useDispatch, useSelector } from "react-redux";
+import ProblemPage from "./pages/problempage.jsx";
 import Admin from "./pages/admin.jsx";
 import AdminPanel from "./components/admincreate.jsx";
 import AdminDelete from "./components/admindelete.jsx";
 import Startingpage from "./pages/startingpage.jsx";
 import Profile from "./pages/profilepage.jsx";
 
-
-
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated,user,loading } = useSelector((state) => state.auth);
-  
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
- useEffect(() => {
-      dispatch(checkAuth());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
   return (
     <>
       <Routes>
-        <Route
-          path="/startingpage"
-          element={<Startingpage /> }
-        />
-        <Route
-          path="/profile"
-          element={<Profile /> }
-        />
+        {/* Default landing page */}
+        <Route path="/" element={<Startingpage />} />
 
-        <Route
-          path="/"
-          element={isAuthenticated ? <Homepage /> : <Navigate to="/signup" />}
-        />
+        {/* Auth routes */}
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+          element={isAuthenticated ? <Navigate to="/homepage" /> : <Login />}
         />
         <Route
           path="/signup"
-          element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
+          element={isAuthenticated ? <Navigate to="/homepage" /> : <Signup />}
         />
-        {/* <Route
-          path="/Admin" element={<Admin/>}
-        />
-        <Route
-          path="/Admin/create" element={<AdminPanel/>}
-        />
-        <Route
-          path="/Admin/delete" element={<AdminDelete/>}
-        /> */}
 
+        {/* Homepage (after login) */}
+        <Route
+          path="/homepage"
+          element={isAuthenticated ? <Homepage /> : <Navigate to="/login" />}
+        />
+
+        {/* Profile */}
+        <Route path="/profile" element={<Profile />} />
+
+        {/* Admin routes */}
         <Route
           path="/admin"
           element={
@@ -86,7 +76,9 @@ function App() {
             )
           }
         />
-        <Route path="/problem/:problemId" element={<ProblemPage />}></Route>
+
+        {/* Problems */}
+        <Route path="/problem/:problemId" element={<ProblemPage />} />
       </Routes>
     </>
   );
